@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  body { margin: 0; }
+  ::-webkit-scrollbar { width: 0; height: 0; }
+  @keyframes sl-fade { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+  @keyframes sl-pop { from { opacity: 0; transform: scale(.96); } to { opacity: 1; transform: none; } }
+</style>
+</helmet>
+
+<div style="min-height:100vh;width:100%;display:flex;align-items:center;justify-content:center;background:radial-gradient(120% 120% at 50% 0%, #2a335810 0%, #ece8f4 55%, #e4dff0 100%);font-family:'Nunito',sans-serif;padding:28px 0">
+  <div style="position:relative;width:390px;height:844px;background:#f6f4f9;border-radius:46px;box-shadow:0 30px 70px -20px rgba(27,34,64,.45), 0 0 0 11px #11152b, 0 0 0 13px #2a3358;overflow:hidden;display:flex;flex-direction:column">
+
+    <!-- status bar -->
+    <div style="flex:none;height:46px;display:flex;align-items:flex-end;justify-content:space-between;padding:0 26px 7px;font-size:14px;font-weight:700;color:{{ statusColor }};z-index:40;position:relative">
+      <span>9:41</span>
+      <span style="display:flex;gap:6px;align-items:center;font-family:'Material Symbols Rounded';font-size:17px">signal_cellular_alt wifi battery_full</span>
+    </div>
+
+    <!-- main -->
+    <div style="position:relative;flex:1;overflow:hidden">
+
+      <!-- ================= SPLASH ================= -->
+      <sc-if value="{{ isSplash }}" hint-placeholder-val="{{ true }}">
+        <div style="position:absolute;inset:0;display:flex;flex-direction:column;background:linear-gradient(165deg, #232b52 0%, #2d2a55 55%, #3a3168 100%);color:#fff;padding:0 30px 40px;animation:sl-fade .5s ease">
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center">
+            <div style="width:96px;height:96px;border-radius:30px;background:linear-gradient(150deg,#9b86c9,#c6b8e8);display:flex;align-items:center;justify-content:center;box-shadow:0 16px 40px -10px rgba(155,134,201,.7);margin-bottom:28px">
+              <span style="font-family:'Material Symbols Rounded';font-size:50px;color:#fff;font-variation-settings:'FILL' 1">health_and_safety</span>
+            </div>
+            <div style="font-size:34px;font-weight:800;letter-spacing:-.5px">Safe Line</div>
+            <div style="font-size:19px;font-weight:500;color:#d7cdee;margin-top:14px;max-width:240px;line-height:1.45">Você não está sozinha.</div>
+            <div style="font-size:14px;font-weight:500;color:#a99fce;margin-top:10px;max-width:250px;line-height:1.5">Um espaço seguro, sigiloso e acolhedor, sempre que precisar.</div>
+          </div>
+          <button onClick="{{ goLogin }}" style="border:none;width:100%;height:56px;border-radius:18px;background:#fff;color:#2a3358;font-size:17px;font-weight:700;font-family:inherit;cursor:pointer;box-shadow:0 10px 26px -10px rgba(0,0,0,.4)">Entrar</button>
+          <button onClick="{{ goSignup }}" style="border:1.5px solid rgba(255,255,255,.35);width:100%;height:56px;border-radius:18px;background:transparent;color:#fff;font-size:17px;font-weight:700;font-family:inherit;cursor:pointer;margin-top:14px">Criar conta</button>
+          <button onClick="{{ quickExit }}" style="border:none;background:transparent;color:#a99fce;font-size:13px;font-weight:600;font-family:inherit;cursor:pointer;margin-top:22px;display:flex;align-items:center;gap:6px;align-self:center">
+            <span style="font-family:'Material Symbols Rounded';font-size:16px">calculate</span> Saída rápida
+          </button>
+        </div>
+      </sc-if>
+
+      <!-- ================= LOGIN ================= -->
+      <sc-if value="{{ isLogin }}" hint-placeholder-val="{{ true }}">
+        <div style="position:absolute;inset:0;display:flex;flex-direction:column;background:#f6f4f9;padding:14px 28px 28px;animation:sl-fade .35s ease">
+          <button onClick="{{ goSplash }}" style="border:none;background:transparent;cursor:pointer;width:40px;height:40px;display:flex;align-items:center;justify-content:center;margin-left:-8px;color:#2a3358"><span style="font-family:'Material Symbols Rounded';font-size:26px">arrow_back</span></button>
+          <div style="margin-top:18px">
+            <div style="font-size:27px;font-weight:800;color:#232b52">Bem-vinda de volta</div>
+            <div style="font-size:15px;font-weight:500;color:#6b6f85;margin-top:6px">Seus dados são protegidos e sigilosos.</div>
+          </div>
+
+          <div style="margin-top:30px">
+            <label style="font-size:13px;font-weight:700;color:#52566e;display:block;margin-bottom:8px">E-mail ou telefone</label>
+            <div style="display:flex;align-items:center;gap:10px;background:#fff;border:1.5px solid {{ idBorder }};border-radius:15px;padding:0 14px;height:54px">
+              <span style="font-family:'Material Symbols Rounded';font-size:21px;color:#9b86c9">alternate_email</span>
+              <input value="{{ loginId }}" onInput="{{ onLoginId }}" placeholder="voce@exemplo.com" style="border:none;outline:none;background:transparent;flex:1;font-family:inherit;font-size:16px;font-weight:600;color:#232b52" />
+            </div>
+          </div>
+
+          <div style="margin-top:18px">
+            <label style="font-size:13px;font-weight:700;color:#52566e;display:block;margin-bottom:8px">Senha</label>
+            <div style="display:flex;align-items:center;gap:10px;background:#fff;border:1.5px solid {{ passBorder }};border-radius:15px;padding:0 14px;height:54px">
+              <span style="font-family:'Material Symbols Rounded';font-size:21px;color:#9b86c9">lock</span>
+              <input value="{{ loginPass }}" onInput="{{ onLoginPass }}" type="password" placeholder="••••••••" style="border:none;outline:none;background:transparent;flex:1;font-family:inherit;font-size:16px;font-weight:600;color:#232b52" />
+            </div>
+          </div>
+
+          <sc-if value="{{ loginErr }}" hint-placeholder-val="">
+            <div style="display:flex;align-items:center;gap:7px;margin-top:14px;color:#b25b78;font-size:13.5px;font-weight:600">
+              <span style="font-family:'Material Symbols Rounded';font-size:18px">error</span>{{ loginErr }}
+            </div>
+          </sc-if>
+
+          <button onClick="{{ goHomeReset }}" style="border:none;background:transparent;color:#7a6bb0;font-size:14px;font-weight:700;font-family:inherit;cursor:pointer;align-self:flex-end;margin-top:14px;padding:6px 2px">Esqueci minha senha</button>
+
+          <button onClick="{{ doLogin }}" style="border:none;width:100%;height:56px;border-radius:18px;background:linear-gradient(150deg,#2d2a55,#4a3f7d);color:#fff;font-size:17px;font-weight:700;font-family:inherit;cursor:pointer;margin-top:8px;box-shadow:0 12px 28px -12px rgba(45,42,85,.7)">Entrar</button>
+
+          <div style="display:flex;align-items:center;gap:12px;margin:22px 0;color:#b9b3cb;font-size:12px;font-weight:600">
+            <div style="flex:1;height:1px;background:#ddd6e8"></div>ACESSO RÁPIDO<div style="flex:1;height:1px;background:#ddd6e8"></div>
+          </div>
+          <div style="display:flex;gap:12px">
+            <button onClick="{{ goHomeReset }}" style="flex:1;border:1.5px solid #e1dbef;background:#fff;border-radius:15px;height:52px;display:flex;align-items:center;justify-content:center;gap:8px;font-family:inherit;font-size:14px;font-weight:700;color:#2a3358;cursor:pointer"><span style="font-family:'Material Symbols Rounded';font-size:21px;color:#9b86c9">fingerprint</span>Biometria</button>
+            <button onClick="{{ quickExit }}" style="flex:1;border:1.5px solid #e1dbef;background:#fff;border-radius:15px;height:52px;display:flex;align-items:center;justify-content:center;gap:8px;font-family:inherit;font-size:14px;font-weight:700;color:#2a3358;cursor:pointer"><span style="font-family:'Material Symbols Rounded';font-size:21px;color:#9b86c9">visibility_off</span>Modo discreto</button>
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- ================= SIGNUP (simplificado) ================= -->
+      <sc-if value="{{ isSignup }}" hint-placeholder-val="{{ true }}">
+        <div style="position:absolute;inset:0;display:flex;flex-direction:column;background:#f6f4f9;padding:14px 28px 28px;animation:sl-fade .35s ease">
+          <button onClick="{{ goSplash }}" style="border:none;background:transparent;cursor:pointer;width:40px;height:40px;display:flex;align-items:center;justify-content:center;margin-left:-8px;color:#2a3358"><span style="font-family:'Material Symbols Rounded';font-size:26px">arrow_back</span></button>
+          <div style="margin-top:18px">
+            <div style="font-size:27px;font-weight:800;color:#232b52">Criar conta</div>
+            <div style="font-size:15px;font-weight:500;color:#6b6f85;margin-top:6px">Use um apelido se preferir não se identificar.</div>
+          </div>
+          <div style="margin-top:28px;display:flex;flex-direction:column;gap:16px">
+            <div style="display:flex;align-items:center;gap:10px;background:#fff;border:1.5px solid #e1dbef;border-radius:15px;padding:0 14px;height:54px"><span style="font-family:'Material Symbols Rounded';font-size:21px;color:#9b86c9">person</span><input placeholder="Nome ou apelido" style="border:none;outline:none;background:transparent;flex:1;font-family:inherit;font-size:16px;font-weight:600;color:#232b52" /></div>
+            <div style="display:flex;align-items:center;gap:10px;background:#fff;border:1.5px solid #e1dbef;border-radius:15px;padding:0 14px;height:54px"><span style="font-family:'Material Symbols Rounded';font-size:21px;color:#9b86c9">alternate_email</span><input placeholder="E-mail ou telefone" style="border:none;outline:none;background:transparent;flex:1;font-family:inherit;font-size:16px;font-weight:600;color:#232b52" /></div>
+            <div style="display:flex;align-items:center;gap:10px;background:#fff;border:1.5px solid #e1dbef;border-radius:15px;padding:0 14px;height:54px"><span style="font-family:'Material Symbols Rounded';font-size:21px;color:#9b86c9">lock</span><input type="password" placeholder="Criar senha" style="border:none;outline:none;background:transparent;flex:1;font-family:inherit;font-size:16px;font-weight:600;color:#232b52" /></div>
+          </div>
+          <div style="display:flex;gap:10px;align-items:flex-start;margin-top:20px;background:#efeaf8;border-radius:14px;padding:14px">
+            <span style="font-family:'Material Symbols Rounded';font-size:20px;color:#7a6bb0;margin-top:1px">verified_user</span>
+            <div style="font-size:13px;font-weight:600;color:#5d5878;line-height:1.5">Seu cadastro é sigiloso. Você pode ativar o modo camuflado e a saída rápida a qualquer momento.</div>
+          </div>
+          <button onClick="{{ goHomeReset }}" style="border:none;width:100%;height:56px;border-radius:18px;background:linear-gradient(150deg,#2d2a55,#4a3f7d);color:#fff;font-size:17px;font-weight:700;font-family:inherit;cursor:pointer;margin-top:auto;box-shadow:0 12px 28px -12px rgba(45,42,85,.7)">Criar conta com segurança</button>
+        </div>
+      </sc-if>
+
+      <!-- ================= HOME ================= -->
+      <sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
+        <div style="position:absolute;inset:0;display:flex;flex-direction:column;background:#f6f4f9;animation:sl-fade .35s ease">
+          <div style="flex:none;padding:8px 24px 18px;background:linear-gradient(160deg,#232b52,#3a3168);border-radius:0 0 26px 26px;color:#fff">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start">
+              <div>
+                <div style="font-size:14px;font-weight:600;color:#bcb2dd">Olá,</div>
+                <div style="font-size:23px;font-weight:800;margin-top:2px">Que bom ter você aqui.</div>
+              </div>
+              <button onClick="{{ quickExit }}" style="border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.08);border-radius:12px;width:40px;height:40px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#fff"><span style="font-family:'Material Symbols Rounded';font-size:21px">visibility_off</span></button>
+            </div>
+            <div style="display:flex;gap:9px;align-items:center;margin-top:16px;background:rgba(255,255,255,.1);border-radius:13px;padding:11px 13px">
+              <span style="font-family:'Material Symbols Rounded';font-size:19px;color:#c6b8e8">favorite</span>
+              <span style="font-size:13px;font-weight:600;color:#e7e1f4;line-height:1.4">Você está em um espaço seguro. Respire fundo.</span>
+            </div>
+          </div>
+
+          <div style="flex:1;overflow-y:auto;padding:20px 22px 120px">
+            <div style="font-size:13px;font-weight:700;color:#8b8aa3;letter-spacing:.3px;margin-bottom:13px">COMO PODEMOS AJUDAR?</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:13px">
+              <sc-for list="{{ homeCards }}" as="card" hint-placeholder-count="4">
+                <button onClick="{{ card.onClick }}" style="border:none;text-align:left;background:#fff;border-radius:20px;padding:17px;cursor:pointer;font-family:inherit;box-shadow:0 4px 16px -10px rgba(45,42,85,.4);display:flex;flex-direction:column;gap:12px;min-height:128px">
+                  <div style="width:44px;height:44px;border-radius:13px;background:{{ card.tint }};display:flex;align-items:center;justify-content:center"><span style="font-family:'Material Symbols Rounded';font-size:24px;color:{{ card.color }};font-variation-settings:'FILL' 1">{{ card.icon }}</span></div>
+                  <div>
+                    <div style="font-size:15.5px;font-weight:800;color:#232b52;line-height:1.2">{{ card.title }}</div>
+                    <div style="font-size:12.5px;font-weight:600;color:#8b8aa3;margin-top:4px;line-height:1.3">{{ card.sub }}</div>
+                  </div>
+                </button>
+              </sc-for>
+            </div>
+
+            <button onClick="{{ goAuthorities }}" style="border:none;width:100%;margin-top:16px;background:linear-gradient(135deg,#8a4a63,#a85f7d);border-radius:20px;padding:17px 18px;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:14px;box-shadow:0 10px 26px -12px rgba(138,74,99,.7)">
+              <div style="width:46px;height:46px;border-radius:14px;background:rgba(255,255,255,.18);display:flex;align-items:center;justify-content:center;flex:none"><span style="font-family:'Material Symbols Rounded';font-size:25px;color:#fff;font-variation-settings:'FILL' 1">call</span></div>
+              <div style="text-align:left;flex:1">
+                <div style="font-size:16px;font-weight:800;color:#fff">Falar com autoridades</div>
+                <div style="font-size:12.5px;font-weight:600;color:#f3dfe8;margin-top:2px">Contato rápido e discreto, com localização</div>
+              </div>
+              <span style="font-family:'Material Symbols Rounded';font-size:22px;color:#fff">chevron_right</span>
+            </button>
+
+            <div style="margin-top:22px;font-size:13px;font-weight:700;color:#8b8aa3;letter-spacing:.3px;margin-bottom:11px">DICA DE SEGURANÇA</div>
+            <div style="background:#efeaf8;border-radius:18px;padding:16px;display:flex;gap:12px;align-items:flex-start">
+              <span style="font-family:'Material Symbols Rounded';font-size:22px;color:#7a6bb0;font-variation-settings:'FILL' 1">touch_app</span>
+              <div style="font-size:13.5px;font-weight:600;color:#5d5878;line-height:1.5">Toque no ícone <b>discreto</b> a qualquer momento para sair rápido. O app abre como uma calculadora comum.</div>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- ================= FÓRUM ================= -->
+      <sc-if value="{{ isForum }}" hint-placeholder-val="{{ true }}">
+        <div style="position:absolute;inset:0;display:flex;flex-direction:column;background:#f6f4f9;animation:sl-fade .35s ease">
+          <div style="flex:none;padding:6px 22px 16px;background:#fff;border-bottom:1px solid #ece7f4">
+            <div style="display:flex;justify-content:space-between;align-items:center">
+              <div style="font-size:21px;font-weight:800;color:#232b52">Fórum de apoio</div>
+              <button onClick="{{ quickExit }}" style="border:none;background:#f1edf8;border-radius:11px;width:38px;height:38px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#7a6bb0"><span style="font-family:'Material Symbols Rounded';font-size:20px">visibility_off</span></button>
+            </div>
+            <div style="display:flex;gap:7px;align-items:center;margin-top:10px;background:#eef7f1;border-radius:11px;padding:9px 11px">
+              <span style="font-family:'Material Symbols Rounded';font-size:18px;color:#4f9070">lock</span>
+              <span style="font-size:12.5px;font-weight:600;color:#3f7d60">Totalmente anônimo. Sua identidade nunca é exibida.</span>
+            </div>
+          </div>
+          <div style="flex:1;overflow-y:auto;padding:16px 18px 120px">
+            <button onClick="{{ goShare }}" style="border:1.5px dashed #c9bce6;width:100%;background:#fff;border-radius:16px;padding:15px;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:11px;margin-bottom:16px">
+              <span style="font-family:'Material Symbols Rounded';font-size:24px;color:#7a6bb0">edit_note</span>
+              <span style="font-size:15px;font-weight:700;color:#5d5878">Compartilhar minha história</span>
+            </button>
+            <sc-for list="{{ displayPosts }}" as="post" hint-placeholder-count="3">
+              <div style="background:#fff;border-radius:18px;padding:16px;margin-bottom:13px;box-shadow:0 4px 16px -12px rgba(45,42,85,.4);animation:sl-pop .3s ease">
+                <div style="display:flex;align-items:center;gap:10px;margin-bottom:11px">
+                  <div style="width:38px;height:38px;border-radius:50%;background:{{ post.tint }};display:flex;align-items:center;justify-content:center"><span style="font-family:'Material Symbols Rounded';font-size:20px;color:{{ post.color }}">{{ post.avatar }}</span></div>
+                  <div style="flex:1"><div style="font-size:14px;font-weight:800;color:#232b52">{{ post.alias }}</div><div style="font-size:11.5px;font-weight:600;color:#a5a3ba">{{ post.time }}</div></div>
+                </div>
+                <div style="font-size:14px;font-weight:500;color:#3f3c54;line-height:1.55">{{ post.text }}</div>
+                <div style="display:flex;gap:18px;margin-top:13px;padding-top:12px;border-top:1px solid #f0ecf6">
+                  <button onClick="{{ post.onLike }}" style="border:none;background:transparent;cursor:pointer;display:flex;align-items:center;gap:6px;font-family:inherit;font-size:13px;font-weight:700;color:{{ post.likeColor }}"><span style="font-family:'Material Symbols Rounded';font-size:20px;font-variation-settings:'FILL' {{ post.likeFill }}">favorite</span>{{ post.likes }}</button>
+                  <button onClick="{{ post.onComment }}" style="border:none;background:transparent;cursor:pointer;display:flex;align-items:center;gap:6px;font-family:inherit;font-size:13px;font-weight:700;color:#8b8aa3"><span style="font-family:'Material Symbols Rounded';font-size:20px">mode_comment</span>{{ post.comments }}</button>
+                  <button onClick="{{ post.onSupport }}" style="border:none;background:transparent;cursor:pointer;display:flex;align-items:center;gap:6px;font-family:inherit;font-size:13px;font-weight:700;color:#7a6bb0;margin-left:auto"><span style="font-family:'Material Symbols Rounded';font-size:20px">volunteer_activism</span>Apoiar</button>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- ================= COMPARTILHAR RELATO ================= -->
+      <sc-if value="{{ isShare }}" hint-placeholder-val="{{ true }}">
+        <div style="position:absolute;inset:0;display:flex;flex-direction:column;background:#f6f4f9;animation:sl-fade .35s ease">
+          <div style="flex:none;display:flex;align-items:center;gap:6px;padding:6px 18px 14px;background:#fff;border-bottom:1px solid #ece7f4">
+            <button onClick="{{ back }}" style="border:none;background:transparent;cursor:pointer;width:40px;height:40px;display:flex;align-items:center;justify-content:center;color:#2a3358"><span style="font-family:'Material Symbols Rounded';font-size:25px">arrow_back</span></button>
+            <div style="font-size:19px;font-weight:800;color:#232b52">Compartilhar relato</div>
+          </div>
+          <div style="flex:1;overflow-y:auto;padding:18px 20px 28px">
+            <div style="display:flex;gap:10px;align-items:flex-start;background:#fff3e9;border-radius:14px;padding:13px 14px;margin-bottom:18px">
+              <span style="font-family:'Material Symbols Rounded';font-size:20px;color:#c07a3e;margin-top:1px">info</span>
+              <div style="font-size:13px;font-weight:600;color:#9a6534;line-height:1.5">Compartilhe apenas o que se sentir confortável. Evite nomes, endereços e dados que identifiquem você.</div>
+            </div>
+            <label style="font-size:13px;font-weight:700;color:#52566e;display:block;margin-bottom:8px">Sua história</label>
+            <textarea value="{{ shareText }}" onInput="{{ onShareText }}" placeholder="Escreva aqui no seu tempo. Você está em um espaço seguro…" style="width:100%;height:200px;resize:none;border:1.5px solid {{ shareBorder }};border-radius:16px;background:#fff;padding:15px;font-family:inherit;font-size:15px;font-weight:500;color:#232b52;line-height:1.55;outline:none"></textarea>
+
+            <button onClick="{{ toggleAnon }}" style="border:1.5px solid #e1dbef;width:100%;background:#fff;border-radius:15px;padding:14px 15px;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:12px;margin-top:16px">
+              <span style="font-family:'Material Symbols Rounded';font-size:23px;color:#7a6bb0;font-variation-settings:'FILL' 1">masks</span>
+              <div style="text-align:left;flex:1"><div style="font-size:14.5px;font-weight:800;color:#232b52">Publicar anonimamente</div><div style="font-size:12px;font-weight:600;color:#8b8aa3">Recomendado para sua segurança</div></div>
+              <sc-if value="{{ shareAnon }}" hint-placeholder-val="{{ true }}"><div style="width:46px;height:28px;border-radius:14px;background:#7a6bb0;display:flex;align-items:center;justify-content:flex-end;padding:3px"><div style="width:22px;height:22px;border-radius:50%;background:#fff"></div></div></sc-if>
+              <sc-if value="{{ shareNotAnon }}" hint-placeholder-val=""><div style="width:46px;height:28px;border-radius:14px;background:#d8d2e6;display:flex;align-items:center;justify-content:flex-start;padding:3px"><div style="width:22px;height:22px;border-radius:50%;background:#fff"></div></div></sc-if>
+            </button>
+
+            <sc-if value="{{ shareErr }}" hint-placeholder-val="">
+              <div style="display:flex;align-items:center;gap:7px;margin-top:14px;color:#b25b78;font-size:13.5px;font-weight:600"><span style="font-family:'Material Symbols Rounded';font-size:18px">error</span>{{ shareErr }}</div>
+            </sc-if>
+
+            <button onClick="{{ publish }}" style="border:none;width:100%;height:56px;border-radius:18px;background:linear-gradient(150deg,#2d2a55,#4a3f7d);color:#fff;font-size:16px;font-weight:700;font-family:inherit;cursor:pointer;margin-top:18px;display:flex;align-items:center;justify-content:center;gap:9px;box-shadow:0 12px 28px -12px rgba(45,42,85,.7)"><span style="font-family:'Material Symbols Rounded';font-size:21px">lock</span>Publicar com segurança</button>
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- ================= AUTORIDADES ================= -->
+      <sc-if value="{{ isAuthorities }}" hint-placeholder-val="{{ true }}">
+        <div style="position:absolute;inset:0;display:flex;flex-direction:column;background:#f6f4f9;animation:sl-fade .35s ease">
+          <div style="flex:none;display:flex;align-items:center;gap:6px;padding:6px 18px 14px;background:#fff;border-bottom:1px solid #ece7f4">
+            <button onClick="{{ back }}" style="border:none;background:transparent;cursor:pointer;width:40px;height:40px;display:flex;align-items:center;justify-content:center;color:#2a3358"><span style="font-family:'Material Symbols Rounded';font-size:25px">arrow_back</span></button>
+            <div style="font-size:19px;font-weight:800;color:#232b52">Contato de emergência</div>
+          </div>
+          <div style="flex:1;overflow-y:auto;padding:16px 20px 28px">
+            <div style="font-size:14px;font-weight:600;color:#6b6f85;line-height:1.5;margin-bottom:16px">Toque para ligar agora. Se ativado, sua localização é enviada automaticamente.</div>
+            <div style="display:flex;flex-direction:column;gap:11px">
+              <sc-for list="{{ authorities }}" as="a" hint-placeholder-count="5">
+                <button onClick="{{ a.onCall }}" style="border:none;width:100%;background:#fff;border-radius:18px;padding:15px 16px;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:14px;box-shadow:0 4px 16px -12px rgba(45,42,85,.4)">
+                  <div style="width:50px;height:50px;border-radius:15px;background:{{ a.tint }};display:flex;align-items:center;justify-content:center;flex:none"><span style="font-family:'Material Symbols Rounded';font-size:26px;color:{{ a.color }};font-variation-settings:'FILL' 1">{{ a.icon }}</span></div>
+                  <div style="text-align:left;flex:1"><div style="font-size:16px;font-weight:800;color:#232b52">{{ a.label }}</div><div style="font-size:13px;font-weight:600;color:#8b8aa3;margin-top:1px">{{ a.desc }}</div></div>
+                  <div style="display:flex;flex-direction:column;align-items:center;gap:2px;color:#8a4a63"><span style="font-family:'Material Symbols Rounded';font-size:24px;font-variation-settings:'FILL' 1">call</span><span style="font-size:13px;font-weight:800">{{ a.num }}</span></div>
+                </button>
+              </sc-for>
+            </div>
+
+            <button onClick="{{ toggleAutoLoc }}" style="border:none;width:100%;background:#efeaf8;border-radius:18px;padding:15px 16px;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:12px;margin-top:16px">
+              <span style="font-family:'Material Symbols Rounded';font-size:24px;color:#7a6bb0;font-variation-settings:'FILL' 1">my_location</span>
+              <div style="text-align:left;flex:1"><div style="font-size:14.5px;font-weight:800;color:#232b52">Enviar mensagem com localização</div><div style="font-size:12px;font-weight:600;color:#8b8aa3">Mensagem automática ao ligar</div></div>
+              <sc-if value="{{ autoLoc }}" hint-placeholder-val="{{ true }}"><div style="width:46px;height:28px;border-radius:14px;background:#7a6bb0;display:flex;align-items:center;justify-content:flex-end;padding:3px"><div style="width:22px;height:22px;border-radius:50%;background:#fff"></div></div></sc-if>
+              <sc-if value="{{ autoLocOff }}" hint-placeholder-val=""><div style="width:46px;height:28px;border-radius:14px;background:#d8d2e6;display:flex;align-items:center;justify-content:flex-start;padding:3px"><div style="width:22px;height:22px;border-radius:50%;background:#fff"></div></div></sc-if>
+            </button>
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- ================= PROFISSIONAIS ================= -->
+      <sc-if value="{{ isProfessionals }}" hint-placeholder-val="{{ true }}">
+        <div style="position:absolute;inset:0;display:flex;flex-direction:column;background:#f6f4f9;animation:sl-fade .35s ease">
+          <div style="flex:none;padding:6px 22px 14px;background:#fff;border-bottom:1px solid #ece7f4">
+            <div style="display:flex;justify-content:space-between;align-items:center">
+              <div style="font-size:21px;font-weight:800;color:#232b52">Profissionais de apoio</div>
+              <button onClick="{{ quickExit }}" style="border:none;background:#f1edf8;border-radius:11px;width:38px;height:38px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#7a6bb0"><span style="font-family:'Material Symbols Rounded';font-size:20px">visibility_off</span></button>
+            </div>
+            <div style="display:flex;gap:8px;margin-top:13px;overflow-x:auto">
+              <sc-for list="{{ filterChips }}" as="chip" hint-placeholder-count="5">
+                <button onClick="{{ chip.onClick }}" style="border:1.5px solid {{ chip.border }};background:{{ chip.bg }};color:{{ chip.color }};border-radius:20px;padding:7px 15px;font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;flex:none">{{ chip.name }}</button>
+              </sc-for>
+            </div>
+          </div>
+          <div style="flex:1;overflow-y:auto;padding:16px 20px 120px">
+            <sc-for list="{{ filteredPros }}" as="pro" hint-placeholder-count="4">
+              <div style="background:#fff;border-radius:18px;padding:16px;margin-bottom:12px;box-shadow:0 4px 16px -12px rgba(45,42,85,.4);display:flex;gap:13px;align-items:center">
+                <div style="width:50px;height:50px;border-radius:15px;background:{{ pro.tint }};display:flex;align-items:center;justify-content:center;flex:none"><span style="font-family:'Material Symbols Rounded';font-size:25px;color:{{ pro.color }};font-variation-settings:'FILL' 1">{{ pro.icon }}</span></div>
+                <div style="flex:1">
+                  <div style="display:flex;align-items:center;gap:7px"><div style="font-size:15.5px;font-weight:800;color:#232b52">{{ pro.name }}</div><sc-if value="{{ pro.hasTag }}" hint-placeholder-val=""><span style="font-size:10.5px;font-weight:800;color:#3f7d60;background:#e3f2e9;border-radius:6px;padding:2px 7px">{{ pro.tag }}</span></sc-if></div>
+                  <div style="font-size:12.5px;font-weight:600;color:#8b8aa3;margin-top:3px;line-height:1.35">{{ pro.detail }}</div>
+                </div>
+                <button onClick="{{ pro.onContact }}" style="border:none;background:#2d2a55;border-radius:12px;width:42px;height:42px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex:none"><span style="font-family:'Material Symbols Rounded';font-size:21px;color:#fff">chat</span></button>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- ================= INFORMAÇÕES ================= -->
+      <sc-if value="{{ isInfo }}" hint-placeholder-val="{{ true }}">
+        <div style="position:absolute;inset:0;display:flex;flex-direction:column;background:#f6f4f9;animation:sl-fade .35s ease">
+          <div style="flex:none;padding:6px 22px 16px;background:#fff;border-bottom:1px solid #ece7f4">
+            <div style="display:flex;justify-content:space-between;align-items:center">
+              <div style="font-size:21px;font-weight:800;color:#232b52">Informações</div>
+              <button onClick="{{ quickExit }}" style="border:none;background:#f1edf8;border-radius:11px;width:38px;height:38px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#7a6bb0"><span style="font-family:'Material Symbols Rounded';font-size:20px">visibility_off</span></button>
+            </div>
+            <div style="font-size:13.5px;font-weight:600;color:#8b8aa3;margin-top:4px">Conhecer é o primeiro passo para se proteger.</div>
+          </div>
+          <div style="flex:1;overflow-y:auto;padding:16px 20px 120px">
+            <sc-for list="{{ infoTopics }}" as="topic" hint-placeholder-count="5">
+              <button onClick="{{ topic.onOpen }}" style="border:none;width:100%;background:#fff;border-radius:18px;padding:16px;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:14px;margin-bottom:12px;box-shadow:0 4px 16px -12px rgba(45,42,85,.4)">
+                <div style="width:48px;height:48px;border-radius:14px;background:{{ topic.tint }};display:flex;align-items:center;justify-content:center;flex:none"><span style="font-family:'Material Symbols Rounded';font-size:25px;color:{{ topic.color }};font-variation-settings:'FILL' 1">{{ topic.icon }}</span></div>
+                <div style="text-align:left;flex:1"><div style="font-size:15.5px;font-weight:800;color:#232b52;line-height:1.25">{{ topic.title }}</div><div style="font-size:12.5px;font-weight:600;color:#8b8aa3;margin-top:3px;line-height:1.35">{{ topic.sub }}</div></div>
+                <span style="font-family:'Material Symbols Rounded';font-size:22px;color:#c5bfd6">chevron_right</span>
+              </button>
+            </sc-for>
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- ================= ARTIGO ================= -->
+      <sc-if value="{{ isArticle }}" hint-placeholder-val="">
+        <div style="position:absolute;inset:0;display:flex;flex-direction:column;background:#f6f4f9;animation:sl-fade .35s ease">
+          <div style="flex:none;display:flex;align-items:center;gap:6px;padding:6px 18px 14px;background:#fff;border-bottom:1px solid #ece7f4">
+            <button onClick="{{ back }}" style="border:none;background:transparent;cursor:pointer;width:40px;height:40px;display:flex;align-items:center;justify-content:center;color:#2a3358"><span style="font-family:'Material Symbols Rounded';font-size:25px">arrow_back</span></button>
+            <div style="font-size:16px;font-weight:800;color:#232b52;flex:1;line-height:1.2">{{ articleTitle }}</div>
+          </div>
+          <div style="flex:1;overflow-y:auto;padding:22px 24px 40px">
+            <div style="width:56px;height:56px;border-radius:17px;background:#efeaf8;display:flex;align-items:center;justify-content:center;margin-bottom:18px"><span style="font-family:'Material Symbols Rounded';font-size:30px;color:#7a6bb0;font-variation-settings:'FILL' 1">{{ articleIcon }}</span></div>
+            <div style="font-size:24px;font-weight:800;color:#232b52;line-height:1.2;margin-bottom:16px">{{ articleTitle }}</div>
+            <div style="font-size:15px;font-weight:500;color:#4a4762;line-height:1.7;white-space:pre-line">{{ articleBody }}</div>
+            <div style="margin-top:24px;background:#efeaf8;border-radius:16px;padding:16px;display:flex;gap:11px;align-items:flex-start">
+              <span style="font-family:'Material Symbols Rounded';font-size:22px;color:#7a6bb0;font-variation-settings:'FILL' 1">support_agent</span>
+              <div style="font-size:13.5px;font-weight:600;color:#5d5878;line-height:1.5">Precisa conversar agora? Ligue para a Central de Atendimento à Mulher — <b>180</b> — gratuita e sigilosa, 24h.</div>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- ================= SEGURANÇA ================= -->
+      <sc-if value="{{ isSafety }}" hint-placeholder-val="{{ true }}">
+        <div style="position:absolute;inset:0;display:flex;flex-direction:column;background:#f6f4f9;animation:sl-fade .35s ease">
+          <div style="flex:none;padding:6px 22px 16px;background:#fff;border-bottom:1px solid #ece7f4">
+            <div style="font-size:21px;font-weight:800;color:#232b52">Segurança e privacidade</div>
+            <div style="font-size:13.5px;font-weight:600;color:#8b8aa3;margin-top:4px">Você no controle dos seus dados.</div>
+          </div>
+          <div style="flex:1;overflow-y:auto;padding:18px 20px 120px">
+            <button onClick="{{ quickExit }}" style="border:none;width:100%;background:linear-gradient(135deg,#2d2a55,#4a3f7d);border-radius:18px;padding:17px 18px;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:14px;margin-bottom:18px;box-shadow:0 10px 26px -14px rgba(45,42,85,.8)">
+              <div style="width:46px;height:46px;border-radius:14px;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;flex:none"><span style="font-family:'Material Symbols Rounded';font-size:25px;color:#fff">bolt</span></div>
+              <div style="text-align:left;flex:1"><div style="font-size:16px;font-weight:800;color:#fff">Saída rápida</div><div style="font-size:12.5px;font-weight:600;color:#cbc3e6;margin-top:2px">Fecha o app instantaneamente</div></div>
+              <span style="font-family:'Material Symbols Rounded';font-size:22px;color:#fff">chevron_right</span>
+            </button>
+
+            <div style="background:#fff;border-radius:18px;padding:6px 4px;box-shadow:0 4px 16px -12px rgba(45,42,85,.4)">
+              <button onClick="{{ toggleCamo }}" style="border:none;width:100%;background:transparent;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:13px;padding:13px 14px">
+                <span style="font-family:'Material Symbols Rounded';font-size:23px;color:#7a6bb0;width:26px;text-align:center">calculate</span>
+                <div style="text-align:left;flex:1"><div style="font-size:14.5px;font-weight:700;color:#232b52">Modo camuflado</div><div style="font-size:12px;font-weight:600;color:#9a98ad">Abre disfarçado de calculadora</div></div>
+                <sc-if value="{{ camo }}" hint-placeholder-val="{{ true }}"><div style="width:46px;height:28px;border-radius:14px;background:#7a6bb0;display:flex;align-items:center;justify-content:flex-end;padding:3px"><div style="width:22px;height:22px;border-radius:50%;background:#fff"></div></div></sc-if>
+                <sc-if value="{{ camoOff }}" hint-placeholder-val=""><div style="width:46px;height:28px;border-radius:14px;background:#d8d2e6;display:flex;align-items:center;justify-content:flex-start;padding:3px"><div style="width:22px;height:22px;border-radius:50%;background:#fff"></div></div></sc-if>
+              </button>
+              <div style="height:1px;background:#f0ecf6;margin:0 14px"></div>
+              <button onClick="{{ toggleBio }}" style="border:none;width:100%;background:transparent;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:13px;padding:13px 14px">
+                <span style="font-family:'Material Symbols Rounded';font-size:23px;color:#7a6bb0;width:26px;text-align:center">fingerprint</span>
+                <div style="text-align:left;flex:1"><div style="font-size:14.5px;font-weight:700;color:#232b52">Proteção por senha / biometria</div><div style="font-size:12px;font-weight:600;color:#9a98ad">Exige desbloqueio ao abrir</div></div>
+                <sc-if value="{{ bio }}" hint-placeholder-val="{{ true }}"><div style="width:46px;height:28px;border-radius:14px;background:#7a6bb0;display:flex;align-items:center;justify-content:flex-end;padding:3px"><div style="width:22px;height:22px;border-radius:50%;background:#fff"></div></div></sc-if>
+                <sc-if value="{{ bioOff }}" hint-placeholder-val=""><div style="width:46px;height:28px;border-radius:14px;background:#d8d2e6;display:flex;align-items:center;justify-content:flex-start;padding:3px"><div style="width:22px;height:22px;border-radius:50%;background:#fff"></div></div></sc-if>
+              </button>
+              <div style="height:1px;background:#f0ecf6;margin:0 14px"></div>
+              <div style="display:flex;align-items:center;gap:13px;padding:13px 14px">
+                <span style="font-family:'Material Symbols Rounded';font-size:23px;color:#7a6bb0;width:26px;text-align:center">masks</span>
+                <div style="text-align:left;flex:1"><div style="font-size:14.5px;font-weight:700;color:#232b52">Anonimato no fórum</div><div style="font-size:12px;font-weight:600;color:#9a98ad">Sempre ativo — sua identidade é oculta</div></div>
+                <span style="font-family:'Material Symbols Rounded';font-size:20px;color:#4f9070;font-variation-settings:'FILL' 1">verified</span>
+              </div>
+            </div>
+
+            <button onClick="{{ eraseHistory }}" style="border:1.5px solid #ecd9e0;width:100%;background:#fff;border-radius:16px;padding:15px 16px;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:12px;margin-top:16px">
+              <span style="font-family:'Material Symbols Rounded';font-size:23px;color:#a85f7d">delete_history</span>
+              <div style="text-align:left;flex:1"><div style="font-size:14.5px;font-weight:800;color:#8a4a63">Apagar histórico do app</div><div style="font-size:12px;font-weight:600;color:#b58aa0">Remove navegação e rascunhos deste aparelho</div></div>
+            </button>
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- ================= CALCULADORA (DISFARCE) ================= -->
+      <sc-if value="{{ isCalc }}" hint-placeholder-val="">
+        <div style="position:absolute;inset:0;display:flex;flex-direction:column;background:#0c0c0e;padding:0 16px 26px;animation:sl-fade .25s ease">
+          <div style="flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:flex-end;padding:24px 14px;color:#fff">
+            <div style="font-size:18px;color:#7d7d85;font-weight:400;height:22px">{{ calcSub }}</div>
+            <div style="font-size:74px;font-weight:300;line-height:1.05;letter-spacing:-1px;max-width:100%;overflow:hidden;text-overflow:ellipsis">{{ calc }}</div>
+          </div>
+          <div style="flex:none;display:grid;grid-template-columns:repeat(4,1fr);gap:13px">
+            <sc-for list="{{ calcKeys }}" as="key" hint-placeholder-count="20">
+              <button onClick="{{ key.onPress }}" style="border:none;height:74px;border-radius:50%;background:{{ key.bg }};color:{{ key.fg }};font-family:'Nunito',sans-serif;font-size:30px;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:center">{{ key.label }}</button>
+            </sc-for>
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- ================= BOTTOM NAV ================= -->
+      <sc-if value="{{ showNav }}" hint-placeholder-val="">
+        <div style="position:absolute;left:0;right:0;bottom:0;height:84px;background:#ffffff;border-top:1px solid #eee6f3;display:flex;align-items:flex-start;padding:9px 8px 0;z-index:30;box-shadow:0 -6px 20px -16px rgba(45,42,85,.5)">
+          <sc-for list="{{ navItems }}" as="nav" hint-placeholder-count="5">
+            <button onClick="{{ nav.onClick }}" style="flex:1;border:none;background:transparent;cursor:pointer;font-family:inherit;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 0">
+              <span style="font-family:'Material Symbols Rounded';font-size:25px;color:{{ nav.color }};font-variation-settings:'FILL' {{ nav.fill }}">{{ nav.icon }}</span>
+              <span style="font-size:10.5px;font-weight:700;color:{{ nav.color }}">{{ nav.label }}</span>
+            </button>
+          </sc-for>
+        </div>
+      </sc-if>
+
+      <!-- ================= FLOATING EMERGENCY ================= -->
+      <sc-if value="{{ showEmergency }}" hint-placeholder-val="">
+        <button onClick="{{ goAuthorities }}" style="position:absolute;right:16px;bottom:{{ emgBottom }};z-index:35;border:none;background:linear-gradient(135deg,#8a4a63,#a85f7d);border-radius:18px;height:48px;padding:0 16px;display:flex;align-items:center;gap:8px;cursor:pointer;box-shadow:0 10px 24px -8px rgba(138,74,99,.75)">
+          <span style="font-family:'Material Symbols Rounded';font-size:22px;color:#fff;font-variation-settings:'FILL' 1">call</span>
+          <span style="font-size:13.5px;font-weight:800;color:#fff">Ajuda</span>
+        </button>
+      </sc-if>
+
+      <!-- ================= TOAST ================= -->
+      <sc-if value="{{ toast }}" hint-placeholder-val="">
+        <div style="position:absolute;left:24px;right:24px;bottom:104px;z-index:60;background:#232b52;color:#fff;border-radius:14px;padding:13px 16px;display:flex;align-items:center;gap:10px;box-shadow:0 14px 30px -10px rgba(0,0,0,.5);animation:sl-pop .25s ease">
+          <span style="font-family:'Material Symbols Rounded';font-size:20px;color:#c6b8e8">check_circle</span>
+          <span style="font-size:13.5px;font-weight:600;line-height:1.4">{{ toast }}</span>
+        </div>
+      </sc-if>
+
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:390,&quot;height&quot;:844}}">
+class Component extends DCLogic {
+  state = {
+    screen: 'splash',
+    stack: [],
+    loginId: '', loginPass: '', loginErr: '',
+    calc: '0', calcPrev: null, calcOp: null, calcFresh: true,
+    profFilter: 'Todos',
+    article: null,
+    shareText: '', shareAnon: true, shareErr: '',
+    camo: true, bio: true, autoLoc: true,
+    toast: '',
+    posts: [
+      { id: 1, alias: 'Anônima · Flor', avatar: 'spa', tint: '#efeaf8', color: '#7a6bb0', time: 'há 2 horas', likes: 34, liked: false, comments: 12, text: 'Hoje consegui dar o primeiro passo e procurar ajuda. Estava com muito medo, mas ler vocês aqui me deu coragem. Obrigada por existirem.' },
+      { id: 2, alias: 'Anônima · Aurora', avatar: 'wb_twilight', tint: '#e7eef9', color: '#5b7bb0', time: 'há 5 horas', likes: 58, liked: true, comments: 9, text: 'Demorei a entender que controle e ciúme excessivo também são violência. Saber identificar foi o que me ajudou a buscar apoio. Vocês não estão sozinhas.' },
+      { id: 3, alias: 'Anônima · Maré', avatar: 'water_drop', tint: '#e3f2e9', color: '#4f9070', time: 'ontem', likes: 21, liked: false, comments: 6, text: 'Montei meu plano de segurança com a ajuda das informações daqui. Tenho uma bolsa pronta e pessoas de confiança avisadas. Recomendo demais.' }
+    ]
+  };
+
+  go(s) { this.setState(st => ({ screen: s, stack: [...st.stack, st.screen] })); }
+  back() { this.setState(st => { const stk = [...st.stack]; const p = stk.pop() || 'home'; return { screen: p, stack: stk }; }); }
+  navTab(s) { this.setState({ screen: s, stack: [] }); }
+  showToast(msg) { this.setState({ toast: msg }); clearTimeout(this._t); this._t = setTimeout(() => this.setState({ toast: '' }), 2400); }
+
+  doLogin() {
+    const { loginId, loginPass } = this.state;
+    const idOk = /\S+@\S+\.\S+/.test(loginId) || /^[\d()+\-\s]{8,}$/.test(loginId.trim());
+    if (!idOk) { this.setState({ loginErr: 'Informe um e-mail ou telefone válido.' }); return; }
+    if (loginPass.length < 4) { this.setState({ loginErr: 'A senha deve ter pelo menos 4 caracteres.' }); return; }
+    this.setState({ loginErr: '', screen: 'home', stack: [] });
+  }
+
+  quickExit() { this.setState({ screen: 'calc', calc: '0', calcPrev: null, calcOp: null, calcFresh: true, stack: [] }); }
+
+  toggleLike(id) {
+    this.setState(st => ({ posts: st.posts.map(p => p.id === id ? { ...p, liked: !p.liked, likes: p.likes + (p.liked ? -1 : 1) } : p) }));
+  }
+
+  publish() {
+    const t = this.state.shareText.trim();
+    if (t.length < 10) { this.setState({ shareErr: 'Escreva um pouco mais para publicar (mín. 10 caracteres).' }); return; }
+    const post = { id: Date.now(), alias: this.state.shareAnon ? 'Anônima · Você' : 'Você', avatar: 'favorite', tint: '#fbe9f0', color: '#a85f7d', time: 'agora', likes: 0, liked: false, comments: 0, text: t };
+    this.setState(st => ({ posts: [post, ...st.posts], shareText: '', shareErr: '', screen: 'forum', stack: [] }));
+    this.showToast('Sua história foi publicada com segurança e anonimato.');
+  }
+
+  calcPress(k) {
+    if (k === 'AC') { this.setState({ calc: '0', calcPrev: null, calcOp: null, calcFresh: true }); return; }
+    if (k === '⌫') { this.setState(st => ({ calc: st.calc.length > 1 ? st.calc.slice(0, -1) : '0' })); return; }
+    if (/^[0-9]$/.test(k)) { this.setState(st => ({ calc: (st.calcFresh || st.calc === '0') ? k : st.calc + k, calcFresh: false })); return; }
+    if (k === ',') { this.setState(st => ({ calc: st.calc.includes('.') ? st.calc : st.calc + '.', calcFresh: false })); return; }
+    if (['+', '−', '×', '÷'].includes(k)) { this.setState(st => ({ calcPrev: parseFloat(st.calc), calcOp: k, calcFresh: true })); return; }
+    if (k === '%') { this.setState(st => ({ calc: String(parseFloat(st.calc) / 100), calcFresh: true })); return; }
+    if (k === '=') {
+      this.setState(st => {
+        if (st.calc === '1234') return { screen: 'home', stack: [], calc: '0', calcPrev: null, calcOp: null, calcFresh: true };
+        if (st.calcOp != null && st.calcPrev != null) {
+          const a = st.calcPrev, b = parseFloat(st.calc); let r = 0;
+          if (st.calcOp === '+') r = a + b; else if (st.calcOp === '−') r = a - b; else if (st.calcOp === '×') r = a * b; else if (st.calcOp === '÷') r = b ? a / b : 0;
+          r = Math.round(r * 1e8) / 1e8;
+          return { calc: String(r), calcPrev: null, calcOp: null, calcFresh: true };
+        }
+        return {};
+      });
+    }
+  }
+
+  openArticle(t) { this.go('article'); this.setState({ article: t }); }
+
+  renderVals() {
+    const s = this.state.screen;
+    const appScreens = ['home', 'forum', 'share', 'authorities', 'professionals', 'info', 'article', 'safety'];
+    const navScreens = ['home', 'forum', 'professionals', 'info', 'safety'];
+    const isApp = appScreens.includes(s);
+
+    const navDef = [
+      { key: 'home', label: 'Início', icon: 'home' },
+      { key: 'forum', label: 'Fórum', icon: 'forum' },
+      { key: 'professionals', label: 'Apoio', icon: 'diversity_1' },
+      { key: 'info', label: 'Aprender', icon: 'menu_book' },
+      { key: 'safety', label: 'Segurança', icon: 'shield' }
+    ];
+    const navItems = navDef.map(n => {
+      const active = s === n.key;
+      return { label: n.label, icon: n.icon, color: active ? '#2d2a55' : '#a7a4bb', fill: active ? 1 : 0, onClick: () => this.navTab(n.key) };
+    });
+
+    const homeCards = [
+      { title: 'Fórum de apoio', sub: 'Histórias e acolhimento', icon: 'forum', tint: '#efeaf8', color: '#7a6bb0', onClick: () => this.go('forum') },
+      { title: 'Contato de emergência', sub: 'Autoridades e ajuda', icon: 'call', tint: '#fbe9f0', color: '#a85f7d', onClick: () => this.go('authorities') },
+      { title: 'Profissionais de saúde', sub: 'Psicólogos e mais', icon: 'diversity_1', tint: '#e7eef9', color: '#5b7bb0', onClick: () => this.go('professionals') },
+      { title: 'Informações', sub: 'Orientação e direitos', icon: 'menu_book', tint: '#e3f2e9', color: '#4f9070', onClick: () => this.go('info') }
+    ];
+
+    const displayPosts = this.state.posts.map(p => ({
+      ...p,
+      likeColor: p.liked ? '#a85f7d' : '#8b8aa3',
+      likeFill: p.liked ? 1 : 0,
+      onLike: () => this.toggleLike(p.id),
+      onComment: () => this.showToast('Comentários protegidos — em breve no protótipo.'),
+      onSupport: () => this.showToast('Sua mensagem de apoio foi enviada. ❤')
+    }));
+
+    const authorities = [
+      { label: 'Polícia Militar', desc: 'Emergência geral', num: '190', icon: 'local_police', tint: '#fbe9ec', color: '#a8546a' },
+      { label: 'Emergência médica', desc: 'SAMU — socorro imediato', num: '192', icon: 'emergency', tint: '#fdeee2', color: '#c07a3e' },
+      { label: 'Central da Mulher', desc: 'Atendimento sigiloso 24h', num: '180', icon: 'support_agent', tint: '#efeaf8', color: '#7a6bb0' },
+      { label: 'Apoio psicológico', desc: 'CVV — apoio emocional', num: '188', icon: 'psychology', tint: '#e7eef9', color: '#5b7bb0' },
+      { label: 'Assistência social', desc: 'Disque Direitos Humanos', num: '100', icon: 'diversity_3', tint: '#e3f2e9', color: '#4f9070' }
+    ].map(a => ({ ...a, onCall: () => this.showToast(this.state.autoLoc ? `Ligando para ${a.label} (${a.num}) — localização enviada.` : `Ligando para ${a.label} (${a.num})…`) }));
+
+    const filters = ['Todos', 'Psicológico', 'Jurídico', 'Médico', 'Social'];
+    const filterChips = filters.map(f => {
+      const active = this.state.profFilter === f;
+      return { name: f, bg: active ? '#2d2a55' : '#fff', color: active ? '#fff' : '#7a778f', border: active ? '#2d2a55' : '#e5dff0', onClick: () => this.setState({ profFilter: f }) };
+    });
+
+    const pros = [
+      { name: 'Dra. Helena Martins', cat: 'Psicológico', detail: 'Psicóloga · Atendimento online e presencial', tag: 'Gratuito', icon: 'psychology', tint: '#efeaf8', color: '#7a6bb0' },
+      { name: 'Núcleo Mulher Segura', cat: 'Jurídico', detail: 'Assessoria jurídica · Defensoria Pública', tag: 'Gratuito', icon: 'gavel', tint: '#e7eef9', color: '#5b7bb0' },
+      { name: 'Dr. Paulo Ferreira', cat: 'Médico', detail: 'Clínico geral · Rede pública de saúde', tag: '', icon: 'medical_services', tint: '#fbe9f0', color: '#a85f7d' },
+      { name: 'CRAS Centro', cat: 'Social', detail: 'Assistência social · Acolhimento e encaminhamento', tag: 'Gratuito', icon: 'diversity_3', tint: '#e3f2e9', color: '#4f9070' },
+      { name: 'Dra. Camila Souza', cat: 'Psicológico', detail: 'Psicóloga · Especialista em trauma', tag: '', icon: 'psychology', tint: '#efeaf8', color: '#7a6bb0' },
+      { name: 'Casa Abrigo Aurora', cat: 'Social', detail: 'Acolhimento temporário · Endereço sigiloso', tag: '24h', icon: 'home_health', tint: '#e3f2e9', color: '#4f9070' }
+    ];
+    const filteredPros = pros.filter(p => this.state.profFilter === 'Todos' || p.cat === this.state.profFilter)
+      .map(p => ({ ...p, hasTag: !!p.tag, onContact: () => this.showToast(`Abrindo contato seguro com ${p.name}…`) }));
+
+    const topics = [
+      { id: 't1', icon: 'category', title: 'Tipos de violência doméstica', sub: 'Física, psicológica, moral, sexual e patrimonial', body: 'A violência doméstica vai muito além da agressão física. A Lei Maria da Penha reconhece cinco tipos:\n\n• Física — qualquer ato que ofenda a integridade ou saúde do corpo.\n• Psicológica — humilhação, ameaça, controle, isolamento e manipulação que afetam a saúde emocional.\n• Moral — calúnia, difamação ou injúria.\n• Sexual — forçar ou constranger a qualquer ato sexual não desejado.\n• Patrimonial — controlar dinheiro, destruir bens ou documentos.\n\nReconhecer o tipo de violência é o primeiro passo para buscar a proteção certa.' },
+      { id: 't2', icon: 'visibility', title: 'Como identificar sinais de abuso', sub: 'Padrões de controle, isolamento e medo', body: 'Alguns sinais comuns de um relacionamento abusivo:\n\n• Controle sobre com quem você fala, sai ou se veste.\n• Isolamento da família e amigos.\n• Ciúmes intensos e acusações constantes.\n• Humilhações, gritos ou ameaças.\n• Controle do seu dinheiro.\n• Medo de contrariar a pessoa.\n\nSe você se identifica com vários desses pontos, saiba: a culpa nunca é sua, e existe ajuda disponível.' },
+      { id: 't3', icon: 'support', title: 'Como pedir ajuda', sub: 'Canais seguros e o que dizer', body: 'Pedir ajuda é um ato de coragem, e você não precisa fazer isso sozinha.\n\n• Central de Atendimento à Mulher: ligue 180 — gratuito, sigiloso, 24h.\n• Em perigo imediato: ligue 190.\n• Procure uma Delegacia da Mulher para registrar boletim de ocorrência.\n• Converse com alguém de confiança.\n\nUse a saída rápida deste app sempre que precisar. Sua segurança vem primeiro.' },
+      { id: 't4', icon: 'verified_user', title: 'Como montar um plano de segurança', sub: 'Passos práticos para se proteger', body: 'Um plano de segurança ajuda você a agir com calma em momentos de risco:\n\n• Tenha documentos, dinheiro e remédios em local de fácil acesso.\n• Combine uma palavra-código com pessoas de confiança.\n• Identifique locais seguros para onde ir.\n• Memorize telefones de emergência.\n• Mantenha o celular sempre carregado.\n\nGuarde este plano em um lugar seguro e revise quando precisar.' },
+      { id: 't5', icon: 'gavel', title: 'Direitos da mulher', sub: 'Lei Maria da Penha e medidas protetivas', body: 'A Lei Maria da Penha (Lei 11.340/2006) garante proteção a mulheres em situação de violência:\n\n• Medidas protetivas de urgência, como o afastamento do agressor.\n• Atendimento prioritário em delegacias e no Judiciário.\n• Acompanhamento por equipe multidisciplinar.\n• Direito a abrigo seguro.\n\nVocê tem direito a uma vida livre de violência. A lei está do seu lado.' }
+    ].map(t => ({ ...t, tint: '#efeaf8', color: '#7a6bb0', onOpen: () => this.openArticle(t) }));
+
+    const art = this.state.article;
+
+    const calcKeyDefs = [
+      ['AC', '⌫', '%', '÷'],
+      ['7', '8', '9', '×'],
+      ['4', '5', '6', '−'],
+      ['1', '2', '3', '+'],
+      ['0', '00', ',', '=']
+    ];
+    const calcKeys = [];
+    calcKeyDefs.forEach(row => row.forEach(k => {
+      let bg = '#2b2b30', fg = '#fff';
+      if (['÷', '×', '−', '+', '='].includes(k)) { bg = '#f3992e'; fg = '#fff'; }
+      else if (['AC', '⌫', '%'].includes(k)) { bg = '#4a4a52'; fg = '#fff'; }
+      calcKeys.push({ label: k, bg, fg, onPress: () => this.calcPress(k === '00' ? '0' : k) });
+    }));
+
+    let emgBottom = navScreens.includes(s) ? '98px' : '26px';
+
+    return {
+      isSplash: s === 'splash', isLogin: s === 'login', isSignup: s === 'signup',
+      isHome: s === 'home', isForum: s === 'forum', isShare: s === 'share',
+      isAuthorities: s === 'authorities', isProfessionals: s === 'professionals',
+      isInfo: s === 'info', isArticle: s === 'article', isSafety: s === 'safety', isCalc: s === 'calc',
+      showNav: navScreens.includes(s), showEmergency: isApp && s !== 'authorities',
+      emgBottom,
+      statusColor: (s === 'splash') ? '#fff' : (s === 'calc' ? '#fff' : (s === 'home' ? '#fff' : '#2a3358')),
+
+      goSplash: () => this.setState({ screen: 'splash', stack: [] }),
+      goLogin: () => this.go('login'),
+      goSignup: () => this.go('signup'),
+      goHomeReset: () => this.setState({ screen: 'home', stack: [], loginErr: '' }),
+      goShare: () => this.go('share'),
+      goAuthorities: () => this.go('authorities'),
+      back: () => this.back(),
+      quickExit: () => this.quickExit(),
+
+      loginId: this.state.loginId, loginPass: this.state.loginPass, loginErr: this.state.loginErr,
+      idBorder: this.state.loginErr && !/\S+@\S+\.\S+/.test(this.state.loginId) && !/^[\d()+\-\s]{8,}$/.test(this.state.loginId.trim()) ? '#dba9bb' : '#e1dbef',
+      passBorder: this.state.loginErr && this.state.loginPass.length < 4 ? '#dba9bb' : '#e1dbef',
+      onLoginId: (e) => this.setState({ loginId: e.target.value, loginErr: '' }),
+      onLoginPass: (e) => this.setState({ loginPass: e.target.value, loginErr: '' }),
+      doLogin: () => this.doLogin(),
+
+      homeCards, navItems, displayPosts, authorities, filterChips, filteredPros, infoTopics: topics,
+
+      shareText: this.state.shareText, shareErr: this.state.shareErr,
+      shareAnon: this.state.shareAnon, shareNotAnon: !this.state.shareAnon,
+      shareBorder: this.state.shareErr ? '#dba9bb' : '#e1dbef',
+      onShareText: (e) => this.setState({ shareText: e.target.value, shareErr: '' }),
+      toggleAnon: () => this.setState(st => ({ shareAnon: !st.shareAnon })),
+      publish: () => this.publish(),
+
+      autoLoc: this.state.autoLoc, autoLocOff: !this.state.autoLoc,
+      toggleAutoLoc: () => this.setState(st => ({ autoLoc: !st.autoLoc })),
+
+      articleTitle: art ? art.title : '', articleBody: art ? art.body : '', articleIcon: art ? art.icon : 'menu_book',
+
+      camo: this.state.camo, camoOff: !this.state.camo,
+      bio: this.state.bio, bioOff: !this.state.bio,
+      toggleCamo: () => this.setState(st => ({ camo: !st.camo })),
+      toggleBio: () => this.setState(st => ({ bio: !st.bio })),
+      eraseHistory: () => this.showToast('Histórico e rascunhos apagados deste aparelho.'),
+
+      calc: this.state.calc, calcSub: this.state.calcOp ? `${this.state.calcPrev} ${this.state.calcOp}` : '', calcKeys,
+
+      toast: this.state.toast
+    };
+  }
+}
+</script>
+</body>
+</html>
