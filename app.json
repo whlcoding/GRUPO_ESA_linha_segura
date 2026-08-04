@@ -1,13 +1,17 @@
 {
   "expo": {
-    "name": "safeline",
+    "name": "Safe Line",
     "slug": "safeline",
+    "scheme": "safeline",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "infoPlist": {
+        "NSFaceIDUsageDescription": "Use Face ID para desbloquear o Safe Line com segurança."
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -20,6 +24,15 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "plugins": [
+      "expo-secure-store",
+      [
+        "expo-local-authentication",
+        {
+          "faceIDPermission": "Use Face ID para desbloquear o Safe Line com segurança."
+        }
+      ]
+    ]
   }
 }
